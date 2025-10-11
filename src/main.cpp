@@ -5,9 +5,9 @@
 const int WIDTH = 800;
 const int HEIGHT = 600;
 
-// Вершины пирамиды (основание + вершина)
+// Вершины пирамиды
 float vertices[] = {
-    // Основание (квадрат)
+    // Основание
     -0.5f, -0.5f, -0.5f,
      0.5f, -0.5f, -0.5f,
      0.5f, -0.5f,  0.5f,
@@ -17,52 +17,60 @@ float vertices[] = {
     0.0f, 0.5f, 0.0f
 };
 
-// Индексы для построения треугольников
+// Индексы
 unsigned int indices[] = {
-    // Основание
-    0, 1, 2,
-    2, 3, 0,
-    
-    // Боковые грани
-    0, 1, 4,
-    1, 2, 4,
-    2, 3, 4,
-    3, 0, 4
+    0, 1, 2, 2, 3, 0, // Основание
+    0, 1, 4,           // Грань 1
+    1, 2, 4,           // Грань 2  
+    2, 3, 4,           // Грань 3
+    3, 0, 4            // Грань 4
 };
 
-// Простейшая матрица проекции
-void perspective(float fov, float aspect, float near, float far, float* mat) {
+// Функция для установки перспективной проекции
+void setPerspective(float fov, float aspect, float nearPlane, float farPlane) {
     float f = 1.0f / tan(fov * 0.5f);
-    float range = near - far;
+    float range = nearPlane - farPlane;
     
-    mat[0] = f / aspect; mat[4] = 0;   mat[8]  = 0;                     mat[12] = 0;
-    mat[1] = 0;          mat[5] = f;   mat[9]  = 0;                     mat[13] = 0;
-    mat[2] = 0;          mat[6] = 0;   mat[10] = (far + near) / range;  mat[14] = 2 * far * near / range;
-    mat[3] = 0;          mat[7] = 0;   mat[11] = -1;                    mat[15] = 0;
+    float projection[16] = {0};
+    projection[0] = f / aspect;
+    projection[5] = f;
+    projection[10] = (farPlane + nearPlane) / range;
+    projection[11] = -1.0f;
+    projection[14] = 2.0f * farPlane * nearPlane / range;
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadMatrixf(projection);
 }
 
-// Умножение матриц 4x4
-void multiplyMatrices(float* a, float* b, float* result) {
-    for(int i = 0; i < 4; ++i) {
-        for(int j = 0; j < 4; ++j) {
-            result[i*4 + j] = 0;
-            for(int k = 0; k < 4; ++k) {
-                result[i*4 + j] += a[i*4 + k] * b[k*4 + j];
+// Рисуем пирамиду
+void drawPyramid() {
+    glBegin(GL_TRIANGLES);
+    
+    for(int i = 0; i < 18; i += 3) {
+        int idx1 = indices[i];
+        int idx2 = indices[i+1]; 
+        int idx3 = indices[i+2];
+        
+        // Разные цвета для разных частей
+        if(i < 6) {
+            glColor3f(1.0f, 0.0f, 0.0f); // Основание - красное
+        } else {
+            // Боковые грани - разные цвета
+            int face = (i - 6) / 3;
+            switch(face) {
+                case 0: glColor3f(0.0f, 1.0f, 0.0f); break; // зеленый
+                case 1: glColor3f(0.0f, 0.0f, 1.0f); break; // синий  
+                case 2: glColor3f(1.0f, 1.0f, 0.0f); break; // желтый
+                case 3: glColor3f(1.0f, 0.0f, 1.0f); break; // пурпурный
             }
         }
+        
+        glVertex3f(vertices[idx1*3], vertices[idx1*3+1], vertices[idx1*3+2]);
+        glVertex3f(vertices[idx2*3], vertices[idx2*3+1], vertices[idx2*3+2]);
+        glVertex3f(vertices[idx3*3], vertices[idx3*3+1], vertices[idx3*3+2]);
     }
-}
-
-// Создание матрицы поворота
-void rotationMatrix(float angle, float x, float y, float z, float* mat) {
-    float c = cos(angle);
-    float s = sin(angle);
-    float t = 1 - c;
     
-    mat[0] = t*x*x + c;   mat[4] = t*x*y - s*z; mat[8]  = t*x*z + s*y;  mat[12] = 0;
-    mat[1] = t*x*y + s*z; mat[5] = t*y*y + c;   mat[9]  = t*y*z - s*x;  mat[13] = 0;
-    mat[2] = t*x*z - s*y; mat[6] = t*y*z + s*x; mat[10] = t*z*z + c;    mat[14] = 0;
-    mat[3] = 0;           mat[7] = 0;           mat[11] = 0;            mat[15] = 1;
+    glEnd();
 }
 
 int main() {
@@ -83,50 +91,23 @@ int main() {
     // Настройка OpenGL
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, WIDTH, HEIGHT);
-
-    float projection[16];
-    perspective(1.0472f, (float)WIDTH/HEIGHT, 0.1f, 100.0f, projection);
+    
+    // Устанавливаем проекцию
+    setPerspective(1.0472f, (float)WIDTH/HEIGHT, 0.1f, 100.0f);
 
     while(!glfwWindowShouldClose(window)) {
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         // Матрица модели-вида
-        float modelview[16] = {
-            1,0,0,0,
-            0,1,0,0,
-            0,0,1,-3,
-            0,0,0,1
-        };
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(0.0f, 0.0f, -3.0f); // Отодвигаем
         
-        // Добавляем вращение
-        float rotation[16];
-        rotationMatrix((float)glfwGetTime(), 0, 1, 0, rotation);
+        // Вращение
+        glRotatef((float)glfwGetTime() * 50.0f, 0.0f, 1.0f, 0.0f);
         
-        float mvp[16];
-        multiplyMatrices(projection, modelview, mvp);
-        multiplyMatrices(mvp, rotation, mvp);
-        
-        // Устанавливаем матрицу преобразования
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(mvp);
-        
-        // Рисуем пирамиду
-        glBegin(GL_TRIANGLES);
-        glColor3f(1.0f, 0.0f, 0.0f); // Красный
-        
-        for(int i = 0; i < 18; i += 3) {
-            int idx1 = indices[i] * 3;
-            int idx2 = indices[i+1] * 3;
-            int idx3 = indices[i+2] * 3;
-            
-            // Чередуем цвета для граней
-            if(i >= 6) glColor3f(0.0f, (i%3)*0.3f + 0.4f, 0.7f);
-            
-            glVertex3f(vertices[idx1], vertices[idx1+1], vertices[idx1+2]);
-            glVertex3f(vertices[idx2], vertices[idx2+1], vertices[idx2+2]);
-            glVertex3f(vertices[idx3], vertices[idx3+1], vertices[idx3+2]);
-        }
-        glEnd();
+        drawPyramid();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
