@@ -5,4 +5,19 @@ Revolt/
 │   ├── settings.json
 │   └── tasks.json
 └── src/
+    ├── core/
+    │   ├── Application.cpp
+    │   ├── Application.h
+    │   ├── Window.cpp
+    │   └── Window.h
+    ├── graphics/
+    │   ├── Camera.cpp
+    │   ├── Camera.h
+    │   ├── Mesh.cpp
+    │   ├── Mesh.h
+    │   ├── Renderer.cpp
+    │   └── Renderer.h
+    ├── math/
+    │   ├── Matrix4.cpp
+    │   └── Matrix4.h
     └── main.cpp
