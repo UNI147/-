@@ -1,4 +1,4 @@
 @echo off
 cd C:\Revolt
-cmake --build .
+rmdir /s /q "C:\Revolt\build"
 pause

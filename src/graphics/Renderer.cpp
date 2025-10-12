@@ -4,6 +4,7 @@
 
 #include <GLFW/glfw3.h>
 #include "Renderer.h"
+#include <cmath>
 
 namespace Revolt {
 
@@ -14,6 +15,45 @@ void Renderer::Initialize(int width, int height) {
     glEnable(GL_DEPTH_TEST);
     glViewport(0, 0, width, height);
     SetClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    
+    // ВКЛЮЧАЕМ освещение
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    
+    // Простые настройки света
+    float lightPos[] = {2.0f, 5.0f, 5.0f, 1.0f};
+    float lightColor[] = {0.8f, 0.8f, 0.8f, 1.0f};
+    float ambientLight[] = {0.4f, 0.4f, 0.4f, 1.0f};
+    
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, lightColor);
+    
+    // Включаем нормализацию нормалей
+    glEnable(GL_NORMALIZE);
+    
+    // НЕ ВКЛЮЧАЕМ GL_COLOR_MATERIAL здесь - это будет делать Material::Apply()
+}
+
+void Renderer::RenderMesh(Mesh& mesh, const Matrix4& transform) {
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    
+    // Загружаем матрицу вида камеры
+    glLoadMatrixf(m_camera.GetViewMatrix().m);
+    
+    // Обновляем позиции источников света относительно камеры
+    float lightPos[] = {5.0f, 5.0f, 5.0f, 1.0f};
+    float lightPos2[] = {-3.0f, 3.0f, -3.0f, 1.0f};
+    
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+    glLightfv(GL_LIGHT1, GL_POSITION, lightPos2);
+    
+    // Применяем трансформацию объекта
+    glMultMatrixf(transform.m);
+    
+    mesh.Render();
 }
 
 void Renderer::BeginFrame() {
@@ -23,20 +63,13 @@ void Renderer::BeginFrame() {
     glMatrixMode(GL_PROJECTION);
     glLoadMatrixf(m_camera.GetProjectionMatrix().m);
     
-    // Устанавливаем матрицу вида
+    // Переключаемся на MODELVIEW
     glMatrixMode(GL_MODELVIEW);
-    glLoadMatrixf(m_camera.GetViewMatrix().m);
+    glLoadIdentity();
 }
 
 void Renderer::EndFrame() {
-    // Пока пусто - для будущего использования
-}
-
-void Renderer::RenderMesh(Mesh& mesh, const Matrix4& transform) {
-    glPushMatrix();
-    glMultMatrixf(transform.m);
-    mesh.Render();
-    glPopMatrix();
+    // Пока пусто
 }
 
 void Renderer::SetCamera(const Camera& camera) {

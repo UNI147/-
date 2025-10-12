@@ -1,13 +1,28 @@
 Revolt/
 ├── CMakeLists.txt
+├── libs/
+│   ├── glfw/
+│   └── nlohmann/
+├── assets/
+│   └── demo_scene.json
 ├── .vscode/
 │   ├── launch.json
 │   ├── settings.json
 │   └── tasks.json
 └── src/
+    ├── include/
+    │   └── json.hpp
     ├── core/
     │   ├── Application.cpp
     │   ├── Application.h
+    │   ├── GameObject.cpp
+    │   ├── GameObject.h
+    │   ├── ResourceManager.cpp
+    │   ├── ResourceManager.h
+    │   ├── Scene.cpp
+    │   ├── Scene.h
+    │   ├── SceneLoader.cpp
+    │   ├── SceneLoader.h
     │   ├── Window.cpp
     │   └── Window.h
     ├── graphics/

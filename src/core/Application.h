@@ -1,9 +1,10 @@
 #pragma once
 #include "Window.h"
-#include "../graphics/Renderer.h"
-#include "../graphics/Mesh.h"
-#include "../graphics/Camera.h"
-#include "../math/Matrix4.h"
+#include "graphics/Renderer.h"
+#include "graphics/Camera.h"
+#include "core/Scene.h"
+#include "core/SceneLoader.h"
+#include <memory>
 
 namespace Revolt {
 
@@ -15,6 +16,8 @@ public:
     bool Initialize();
     void Run();
     void Shutdown();
+    
+    void PrintSceneInfo();
 
 private:
     void Update(float deltaTime);
@@ -23,10 +26,9 @@ private:
     Window m_window;
     Renderer m_renderer;
     Camera m_camera;
-    Mesh m_pyramidMesh;
+    Scene m_scene;
     bool m_isRunning;
     
-    // Сохраненные соотношения сторон из комментариев
     static const int DEFAULT_WIDTH = 800;
     static const int DEFAULT_HEIGHT = 600;
 };

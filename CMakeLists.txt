@@ -8,22 +8,70 @@ set(ENGINE_SOURCES
     src/main.cpp
     src/core/Application.cpp
     src/core/Window.cpp
+    src/core/Scene.cpp
+    src/core/SceneLoader.cpp
+    src/core/ResourceManager.cpp
+    src/core/GameObject.cpp
     src/graphics/Camera.cpp
     src/graphics/Mesh.cpp
     src/graphics/Renderer.cpp
     src/math/Matrix4.cpp
 )
 
-# Настройка GLFW
-include(FetchContent)
+# Используем локальные библиотеки вместо FetchContent
+option(USE_LOCAL_LIBS "Use local libraries" ON)
 
-FetchContent_Declare(
-    glfw
-    GIT_REPOSITORY https://github.com/glfw/glfw.git
-    GIT_TAG 3.3.8
-)
-
-FetchContent_MakeAvailable(glfw)
+if(USE_LOCAL_LIBS)
+    # GLFW
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libs/glfw")
+        add_subdirectory(libs/glfw)
+        set(GLFW_LIBRARIES glfw)
+    else()
+        message(WARNING "Local GLFW not found, using FetchContent")
+        include(FetchContent)
+        FetchContent_Declare(
+            glfw
+            GIT_REPOSITORY https://github.com/glfw/glfw.git
+            GIT_TAG 3.3.8
+        )
+        FetchContent_MakeAvailable(glfw)
+        set(GLFW_LIBRARIES glfw)
+    endif()
+    
+    # nlohmann/json (header-only)
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/libs/nlohmann")
+        add_subdirectory(libs/nlohmann)
+    else()
+        find_package(nlohmann_json 3.11.2 QUIET)
+        if(NOT nlohmann_json_FOUND)
+            message(WARNING "Local nlohmann/json not found, using FetchContent")
+            include(FetchContent)
+            FetchContent_Declare(
+                nlohmann_json
+                GIT_REPOSITORY https://github.com/nlohmann/json.git
+                GIT_TAG v3.11.2
+            )
+            FetchContent_MakeAvailable(nlohmann_json)
+        endif()
+    endif()
+else()
+    # Оригинальный код с FetchContent
+    include(FetchContent)
+    
+    FetchContent_Declare(
+        glfw
+        GIT_REPOSITORY https://github.com/glfw/glfw.git
+        GIT_TAG 3.3.8
+    )
+    FetchContent_MakeAvailable(glfw)
+    
+    FetchContent_Declare(
+        nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.11.2
+    )
+    FetchContent_MakeAvailable(nlohmann_json)
+endif()
 
 # Настройка OpenGL
 find_package(OpenGL REQUIRED)
@@ -31,19 +79,11 @@ find_package(OpenGL REQUIRED)
 # Создание исполняемого файла
 add_executable(RevoltEngine ${ENGINE_SOURCES})
 
-# Директории включения
-target_include_directories(RevoltEngine PRIVATE 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/core
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/math
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${GLFW_SOURCE_DIR}/include
-)
-
 # Библиотеки для линковки
 target_link_libraries(RevoltEngine 
     OpenGL::GL
-    glfw
+    ${GLFW_LIBRARIES}
+    nlohmann_json::nlohmann_json
 )
 
 # Для Windows также может потребоваться линковка с системными библиотеками
@@ -55,3 +95,12 @@ endif()
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
+
+# Директории включения
+target_include_directories(RevoltEngine PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/graphics
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/math
+)

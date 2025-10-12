@@ -2,8 +2,10 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#include <GLFW/glfw3.h>
 #include "Application.h"
+#include "core/ResourceManager.h"
+#include "core/Scene.h"
+#include "core/SceneLoader.h"
 #include <iostream>
 
 namespace Revolt {
@@ -14,7 +16,16 @@ Application::Application()
 }
 
 Application::~Application() {
-    Shutdown();
+}
+
+void Application::PrintSceneInfo() {
+    std::cout << "Scene objects count: " << m_scene.GetObjects().size() << std::endl;
+    for (const auto& obj : m_scene.GetObjects()) {
+        std::cout << "Object at position: " 
+                  << obj->GetPositionX() << ", " 
+                  << obj->GetPositionY() << ", " 
+                  << obj->GetPositionZ() << std::endl;
+    }
 }
 
 bool Application::Initialize() {
@@ -24,17 +35,15 @@ bool Application::Initialize() {
     
     m_renderer.Initialize(m_window.GetWidth(), m_window.GetHeight());
     
-    // Настраиваем камеру
-    m_camera.SetPerspective(1.0472f, 
-                           (float)m_window.GetWidth()/m_window.GetHeight(), 
-                           0.1f, 100.0f);
-    m_camera.SetPosition(0.0f, 0.0f, 3.0f);
-    m_camera.LookAt(0.0f, 0.0f, 3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+    // Загружаем сцену
+    SceneLoader::LoadSceneFromFile("../../assets/demo_scene.json", m_scene, m_camera);
+
     
+    // Выводим информацию о сцене для отладки
+    PrintSceneInfo();
+    
+    // Устанавливаем камеру в рендерер ПОСЛЕ загрузки
     m_renderer.SetCamera(m_camera);
-    
-    // Создаем меш пирамиды
-    m_pyramidMesh.CreatePyramid();
     
     m_isRunning = true;
     return true;
@@ -43,43 +52,47 @@ bool Application::Initialize() {
 void Application::Run() {
     double lastTime = glfwGetTime();
     
-    while (m_isRunning && !m_window.ShouldClose()) {
+    while (!m_window.ShouldClose() && m_isRunning) {
         double currentTime = glfwGetTime();
         float deltaTime = static_cast<float>(currentTime - lastTime);
-        
-        // Ограничение FPS (~72 кадра в секунду)
-        if (deltaTime < 1.0/72.0) {
-            continue;
-        }
-        
         lastTime = currentTime;
         
+        m_window.PollEvents();
         Update(deltaTime);
         Render();
-        
         m_window.SwapBuffers();
-        m_window.PollEvents();
     }
 }
 
 void Application::Shutdown() {
     m_isRunning = false;
-    glfwTerminate();
 }
 
 void Application::Update(float deltaTime) {
-    // Логика обновления - пока пустая
+    static float totalTime = 0.0f;
+    totalTime += deltaTime;
+    
+    const float rotationSpeed = 180.0f; // градусов в секунду для всех объектов
+    
+    const auto& objects = m_scene.GetObjects();
+    for (size_t i = 0; i < objects.size(); ++i) {
+        float rotation = totalTime * rotationSpeed;
+        
+        objects[i]->SetRotation(0.0f, rotation, 0.0f);
+        objects[i]->UpdateTransform();
+    }
 }
 
 void Application::Render() {
     m_renderer.BeginFrame();
     
-    // Создаем матрицу преобразования для вращения
-    Matrix4 transform = Matrix4::Identity();
-    transform.Rotate(static_cast<float>(glfwGetTime()) * 50.0f, 0.0f, 1.0f, 0.0f);
-    
-    // Рендерим пирамиду
-    m_renderer.RenderMesh(m_pyramidMesh, transform);
+    // Рендерим все объекты сцены
+    const auto& objects = m_scene.GetObjects();
+    for (const auto& obj : objects) {
+        if (obj->GetMesh()) {
+            m_renderer.RenderMesh(*obj->GetMesh(), obj->GetTransform());
+        }
+    }
     
     m_renderer.EndFrame();
 }
