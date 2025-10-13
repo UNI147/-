@@ -23,6 +23,11 @@ namespace Revolt {
         
         const Matrix4& GetTransform() const { return m_transform; }
         void UpdateTransform();
+    
+        void Update(float deltaTime) {
+            // Пока пустая реализация, но метод существует
+            (void)deltaTime; // Используем параметр чтобы убрать warning
+        }
 
         float GetPositionX() const { return m_position[0]; }
         float GetPositionY() const { return m_position[1]; }

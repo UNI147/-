@@ -58,6 +58,13 @@ void Application::Run() {
         lastTime = currentTime;
         
         m_window.PollEvents();
+        
+        // Очищаем черные полосы
+        m_window.ClearBlackBars();
+        
+        // Настраиваем вьюпорт для сцены
+        m_window.SetupViewportForScene();
+        
         Update(deltaTime);
         Render();
         m_window.SwapBuffers();

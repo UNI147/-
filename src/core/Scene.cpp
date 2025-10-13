@@ -21,7 +21,10 @@ void Scene::RemoveGameObject(GameObject* object) {
 }
 
 void Scene::Update(float deltaTime) {
-    // Для будущей логики обновления сцены
+    // Просто вызываем Update для всех объектов
+    for (auto& obj : m_objects) {
+        obj->Update(deltaTime);
+    }
 }
 
 } // namespace Revolt

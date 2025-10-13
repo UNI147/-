@@ -13,7 +13,7 @@ Renderer::Renderer() {
 
 void Renderer::Initialize(int width, int height) {
     glEnable(GL_DEPTH_TEST);
-    glViewport(0, 0, width, height);
+    // Убираем установку вьюпорта и очистку - это теперь делает Window
     SetClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     
     // ВКЛЮЧАЕМ освещение
@@ -32,8 +32,6 @@ void Renderer::Initialize(int width, int height) {
     
     // Включаем нормализацию нормалей
     glEnable(GL_NORMALIZE);
-    
-    // НЕ ВКЛЮЧАЕМ GL_COLOR_MATERIAL здесь - это будет делать Material::Apply()
 }
 
 void Renderer::RenderMesh(Mesh& mesh, const Matrix4& transform) {
@@ -57,7 +55,8 @@ void Renderer::RenderMesh(Mesh& mesh, const Matrix4& transform) {
 }
 
 void Renderer::BeginFrame() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // УБИРАЕМ очистку - это теперь делает Window
+    // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // Устанавливаем матрицу проекции
     glMatrixMode(GL_PROJECTION);
@@ -77,7 +76,7 @@ void Renderer::SetCamera(const Camera& camera) {
 }
 
 void Renderer::SetClearColor(float r, float g, float b, float a) {
-    glClearColor(r, g, b, a);
+    // Сохраняем цвет, но не используем glClearColor здесь
 }
 
 } // namespace Revolt

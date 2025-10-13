@@ -86,9 +86,68 @@ target_link_libraries(RevoltEngine
     nlohmann_json::nlohmann_json
 )
 
-# Для Windows также может потребоваться линковка с системными библиотеками
+# Настройка компилятора
+if(MSVC)
+    # Добавляем определения для компилятора MSVC
+    target_compile_definitions(RevoltEngine PRIVATE _CRT_SECURE_NO_WARNINGS)
+    # Отключаем некоторые предупреждения
+    target_compile_options(RevoltEngine PRIVATE /W4)
+endif()
+
+# Для Windows: настройки манифеста DPI
 if(WIN32)
     target_link_libraries(RevoltEngine opengl32 gdi32)
+    
+    # ЯВНОЕ ОТКЛЮЧЕНИЕ DPI SCALING через компилятор
+    if(MSVC)
+        target_compile_definitions(RevoltEngine PRIVATE 
+            _CRT_SECURE_NO_WARNINGS
+            WIN32_LEAN_AND_MEAN
+            NOMINMAX
+        )
+    endif()
+
+    # ПРОСТОЙ СПОСОБ: используем существующий файл манифеста
+    if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/manifest.xml")
+        # Копируем существующий manifest.xml в бинарную директорию
+        configure_file(
+            "${CMAKE_CURRENT_SOURCE_DIR}/manifest.xml"
+            "${CMAKE_CURRENT_BINARY_DIR}/app.manifest"
+            COPYONLY
+        )
+        
+        # Добавляем манифест к целевому файлу
+        set_target_properties(RevoltEngine PROPERTIES
+            LINK_FLAGS "/MANIFEST:EMBED /MANIFESTINPUT:${CMAKE_CURRENT_BINARY_DIR}/app.manifest"
+        )
+    else()
+        message(WARNING "manifest.xml not found, creating default manifest")
+        
+        # Создаем простой манифест без сложного экранирования
+        file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/app.manifest" 
+            "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n"
+            "<assembly xmlns=\"urn:schemas-microsoft-com:asm.v1\" manifestVersion=\"1.0\">\n"
+            "  <application xmlns=\"urn:schemas-microsoft-com:asm.v3\">\n"
+            "    <windowsSettings>\n"
+            "      <dpiAware xmlns=\"http://schemas.microsoft.com/SMI/2005/WindowsSettings\">false</dpiAware>\n"
+            "      <dpiAwareness xmlns=\"http://schemas.microsoft.com/SMI/2016/WindowsSettings\">unaware</dpiAwareness>\n"
+            "    </windowsSettings>\n"
+            "  </application>\n"
+            "  <compatibility xmlns=\"urn:schemas-microsoft-com:compatibility.v1\">\n"
+            "    <application>\n"
+            "      <supportedOS Id=\"{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}\"/>\n"
+            "      <supportedOS Id=\"{1f676c76-80e1-4239-95bb-83d0f6d0da78}\"/>\n"
+            "      <supportedOS Id=\"{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}\"/>\n"
+            "      <supportedOS Id=\"{35138b9a-5d96-4fbd-8e2d-a2440225f93a}\"/>\n"
+            "    </application>\n"
+            "  </compatibility>\n"
+            "</assembly>\n"
+        )
+        
+        set_target_properties(RevoltEngine PROPERTIES
+            LINK_FLAGS "/MANIFEST:EMBED /MANIFESTINPUT:${CMAKE_CURRENT_BINARY_DIR}/app.manifest"
+        )
+    endif()
 endif()
 
 # Установка выходной директории для исполняемых файлов

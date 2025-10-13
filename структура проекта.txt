@@ -1,4 +1,5 @@
 Revolt/
+├── manifest.xml
 ├── CMakeLists.txt
 ├── libs/
 │   ├── glfw/

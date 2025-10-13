@@ -29,6 +29,7 @@ private:
     Scene m_scene;
     bool m_isRunning;
     
+    // ФИКСИРОВАННОЕ разрешение - никакого масштабирования!
     static const int DEFAULT_WIDTH = 800;
     static const int DEFAULT_HEIGHT = 600;
 };

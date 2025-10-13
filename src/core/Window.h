@@ -15,6 +15,10 @@ public:
     void PollEvents();
     bool ShouldClose() const;
     void Close();
+    
+    // Новые методы для управления вьюпортом
+    void SetupViewportForScene();
+    void ClearBlackBars();
 
     // Разрешения экрана
     static const int WIDTH_320 = 320;
@@ -31,6 +35,8 @@ public:
     GLFWwindow* GetNativeWindow() const { return m_window; }
 
 private:
+    static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    
     int m_width;
     int m_height;
     std::string m_title;
