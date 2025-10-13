@@ -30,7 +30,7 @@ private:
     Window m_window{Window::WIDTH_800, Window::HEIGHT_600, "Revolt Engine"}; // 800x600
     // Window m_window{Window::WIDTH_640, Window::HEIGHT_480, "Revolt Engine"}; // 640x480
     // Window m_window{Window::WIDTH_512, Window::HEIGHT_384, "Revolt Engine"}; // 512x384  
-    // Window m_window{Window::WIDTH_320, Window::HEIGHT_240, "Revolt Engine"}; // 320x240
+    //Window m_window{Window::WIDTH_320, Window::HEIGHT_240, "Revolt Engine"}; // 320x240
     
     Renderer m_renderer;
     Camera m_camera;

@@ -151,48 +151,21 @@ void Application::Render() {
         }
     }
     
-    // РЕНДЕРИМ UI ТОЖЕ В НИЗКОМ РАЗРЕШЕНИИ, НО ПЕРЕД КОПИРОВАНИЕМ В ТЕКСТУРУ
+    // РЕНДЕРИМ UI ТОЖЕ В НИЗКОМ РАЗРЕШЕНИИ
     if (m_showDebugInfo) {
-        // Временно переключаемся в режим 2D для текста
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        // ВАЖНО: меняем порядок координат для правильного позиционирования
-        glOrtho(0, m_window.GetWidth(), 0, m_window.GetHeight(), -1, 1);
-        
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        
-        glDisable(GL_DEPTH_TEST);
-        glDisable(GL_LIGHTING);
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        std::string resolutionInfo = std::to_string(m_window.GetWidth()) + "x" + 
-                                   std::to_string(m_window.GetHeight());
-        std::string fpsInfo = "FPS:" + std::to_string(static_cast<int>(m_fps));
-        std::string debugText = resolutionInfo + "/" + fpsInfo;
-        
+        // Форматируем текст в нужном формате: "(разрешение)(FPS значение)"
+        std::string resolutionInfo = "(" + std::to_string(m_window.GetWidth()) + "x" + 
+                                std::to_string(m_window.GetHeight()) + ")";
+        std::string fpsInfo = "(FPS " + std::to_string(static_cast<int>(m_fps)) + ")";
+        std::string debugText = resolutionInfo + fpsInfo;
+
         // Позиционируем в ВЕРХНЕМ левом углу
-        float textScale = 2.0f;
-        float textX = 15.0f;
-        float textY = m_window.GetHeight() - 40.0f; // От верхнего края
-        
-        // Рендерим текст
+        float textScale = 4.0f;
+        float textX = 20.0f;
+        float textY = 40.0f;
+
+        // Рендерим текст через TextRenderer (только одну строку)
         m_textRenderer.RenderText(debugText, textX, textY, textScale);
-        
-        std::string hint = "Press ` to toggle debug info";
-        m_textRenderer.RenderText(hint, textX, textY - 35.0f, textScale * 0.8f);
-        
-        // Восстанавливаем 3D настройки
-        glDisable(GL_BLEND);
-        glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(m_camera.GetProjectionMatrix().m);
-        
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_LIGHTING);
     }
     
     m_renderer.EndFrame();
