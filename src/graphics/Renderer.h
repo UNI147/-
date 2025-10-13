@@ -1,6 +1,7 @@
 #pragma once
 #include "Camera.h"
 #include "Mesh.h"
+#include "Framebuffer.h"
 
 namespace Revolt {
 
@@ -13,11 +14,13 @@ public:
     void EndFrame();
     void RenderMesh(Mesh& mesh, const Matrix4& transform);
     void SetCamera(const Camera& camera);
+    void RenderToScreen(int screenWidth, int screenHeight);
     
     void SetClearColor(float r, float g, float b, float a);
 
 private:
     Camera m_camera;
+    Framebuffer m_framebuffer; // Новый член
 };
 
 } // namespace Revolt

@@ -12,6 +12,7 @@ public:
     bool Initialize();
     void RenderText(const std::string& text, float x, float y, float scale = 1.0f);
     void SetWindowSize(int width, int height);
+    void SetRenderResolution(int width, int height);
 
 private:
     void DrawDigit(char digit, float x, float y, float scale);
@@ -21,6 +22,8 @@ private:
     int m_windowWidth;
     int m_windowHeight;
     bool m_initialized;
+    int m_renderWidth;
+    int m_renderHeight; 
 };
 
 } // namespace Revolt

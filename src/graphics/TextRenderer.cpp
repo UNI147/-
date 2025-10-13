@@ -4,7 +4,8 @@
 namespace Revolt {
 
 TextRenderer::TextRenderer() 
-    : m_windowWidth(800), m_windowHeight(600), m_initialized(false) {
+    : m_windowWidth(800), m_windowHeight(600), m_initialized(false), 
+      m_renderWidth(800), m_renderHeight(600) {
 }
 
 TextRenderer::~TextRenderer() {
@@ -18,6 +19,12 @@ bool TextRenderer::Initialize() {
 void TextRenderer::SetWindowSize(int width, int height) {
     m_windowWidth = width;
     m_windowHeight = height;
+}
+
+// НОВЫЙ МЕТОД: устанавливаем разрешение рендеринга
+void TextRenderer::SetRenderResolution(int width, int height) {
+    m_renderWidth = width;
+    m_renderHeight = height;
 }
 
 void TextRenderer::RenderText(const std::string& text, float x, float y, float scale) {
@@ -47,18 +54,18 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, float s
     // Рисуем фон (прямоугольник под текстом)
     float bgWidth = text.length() * 12 * scale;
     float bgHeight = 18 * scale;
-    
-    glColor4f(0.0f, 0.0f, 0.0f, 0.8f);
+
+    glColor4f(0.0f, 0.0f, 0.0f, 0.9f);
     glBegin(GL_QUADS);
     glVertex2f(x - 5, y - 3);
     glVertex2f(x + bgWidth, y - 3);
     glVertex2f(x + bgWidth, y + bgHeight);
     glVertex2f(x - 5, y + bgHeight);
     glEnd();
-    
-    // Цвет текста
+
+    // Цвет текста - БЕЛЫЙ
     glColor3f(1.0f, 1.0f, 1.0f);
-    glLineWidth(1.5f);
+    glLineWidth(2.0f);
     
     float currentX = x;
     

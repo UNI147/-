@@ -22,9 +22,13 @@ bool SceneLoader::LoadSceneFromFile(const std::string& filepath, Scene& scene, C
     try {
         json sceneData = json::parse(file);
         
-        // Загрузка камеры
+        // Загрузка камеры - УПРОЩЕННАЯ ВЕРСИЯ
         const auto& camData = sceneData["camera"];
-        camera.SetPerspective(camData["fov"], camData["aspect"], camData["near"], camData["far"]);
+        
+        // Используем фиксированное соотношение сторон или из данных
+        float aspect = camData.contains("aspect") ? camData["aspect"] : (16.0f / 9.0f);
+        
+        camera.SetPerspective(camData["fov"], aspect, camData["near"], camData["far"]);
         
         const auto& pos = camData["position"];
         const auto& lookAt = camData["lookAt"];
@@ -99,8 +103,8 @@ bool SceneLoader::LoadSceneFromFile(const std::string& filepath, Scene& scene, C
 }
 
 void SceneLoader::CreateDemoScene(Scene& scene, Camera& camera) {
-    // Настраиваем камеру
-    camera.SetPerspective(1.0472f, 800.0f/600.0f, 0.1f, 100.0f);
+    // Настраиваем камеру с соотношением сторон 16:9
+    camera.SetPerspective(1.0472f, 16.0f/9.0f, 0.1f, 100.0f);
     camera.LookAt(0.0f, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f);
     
     auto& resourceManager = ResourceManager::GetInstance();

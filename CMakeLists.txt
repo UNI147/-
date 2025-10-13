@@ -16,6 +16,7 @@ set(ENGINE_SOURCES
     src/graphics/Camera.cpp
     src/graphics/Mesh.cpp
     src/graphics/Renderer.cpp
+    src/graphics/Framebuffer.cpp
     src/math/Matrix4.cpp
 )
 

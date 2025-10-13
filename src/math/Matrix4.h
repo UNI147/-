@@ -12,13 +12,19 @@ public:
     static Matrix4 Identity();
     static Matrix4 Perspective(float fov, float aspect, float nearPlane, float farPlane);
     
-    void LoadIdentity(); // ДОБАВЬТЕ ЭТУ СТРОКУ
+    void LoadIdentity();
     void Translate(float x, float y, float z);
     void Rotate(float angle, float x, float y, float z);
     void Scale(float x, float y, float z);
     
     Matrix4 operator*(const Matrix4& other) const;
     Matrix4 Multiply(const Matrix4& other) const;
+    
+    // ДОБАВЬТЕ ЭТОТ МЕТОД
+    float GetAspectRatio() const {
+        // Простая реализация для получения соотношения сторон из матрицы проекции
+        return m[5] != 0 ? m[0] / m[5] : 1.0f;
+    }
 };
 
 } // namespace Revolt

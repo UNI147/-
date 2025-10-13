@@ -30,15 +30,19 @@ public:
     static const int WIDTH_800 = 800;
     static const int HEIGHT_600 = 600;
 
-    int GetWidth() const { return m_width; }
-    int GetHeight() const { return m_height; }
+    int GetWidth() const { return m_renderWidth; }  // Разрешение рендеринга
+    int GetHeight() const { return m_renderHeight; } // Разрешение рендеринга
+    int GetScreenWidth() const { return m_screenWidth; } // Разрешение экрана
+    int GetScreenHeight() const { return m_screenHeight; } // Разрешение экрана
     GLFWwindow* GetNativeWindow() const { return m_window; }
 
 private:
     static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     
-    int m_width;
-    int m_height;
+    int m_renderWidth;   // Разрешение рендеринга (320x240, 512x384 и т.д.)
+    int m_renderHeight;  // Разрешение рендеринга
+    int m_screenWidth;   // Разрешение экрана (нативное)
+    int m_screenHeight;  // Разрешение экрана
     std::string m_title;
     GLFWwindow* m_window;
 };

@@ -8,8 +8,8 @@
 namespace Revolt {
 
 Application::Application() 
-    : m_window(DEFAULT_WIDTH, DEFAULT_HEIGHT, "Revolt Engine")
-    , m_isRunning(false)
+    // Конструктор Window уже инициализирован в объявлении с выбранным разрешением
+    : m_isRunning(false)
     , m_showDebugInfo(false)
     , m_fps(0.0f)
     , m_fpsAccumulator(0.0f)
@@ -35,6 +35,7 @@ bool Application::Initialize() {
         return false;
     }
     
+    // Инициализируем рендерер с РАЗРЕШЕНИЕМ РЕНДЕРИНГА
     m_renderer.Initialize(m_window.GetWidth(), m_window.GetHeight());
     
     // Инициализируем TextRenderer
@@ -42,16 +43,24 @@ bool Application::Initialize() {
         std::cerr << "Failed to initialize TextRenderer" << std::endl;
         return false;
     }
-    m_textRenderer.SetWindowSize(m_window.GetWidth(), m_window.GetHeight());
+    
+    // Устанавливаем разрешение рендеринга для TextRenderer
+    m_textRenderer.SetRenderResolution(m_window.GetWidth(), m_window.GetHeight());
+    m_textRenderer.SetWindowSize(m_window.GetScreenWidth(), m_window.GetScreenHeight());
+    
+    // Обновляем камеру для соотношения сторон РЕНДЕРИНГА
+    float aspectRatio = (float)m_window.GetWidth() / (float)m_window.GetHeight();
+    m_camera.SetPerspective(1.0472f, aspectRatio, 0.1f, 100.0f);
     
     // Загружаем сцену
     SceneLoader::LoadSceneFromFile("../../assets/demo_scene.json", m_scene, m_camera);
 
-    
-    // Выводим информацию о сцене для отладки
+    // Выводим информацию для отладки
     PrintSceneInfo();
+    std::cout << "Render resolution: " << m_window.GetWidth() << "x" << m_window.GetHeight() << std::endl;
+    std::cout << "Screen resolution: " << m_window.GetScreenWidth() << "x" << m_window.GetScreenHeight() << std::endl;
     
-    // Устанавливаем камеру в рендерер ПОСЛЕ загрузки
+    // Устанавливаем камеру в рендерер
     m_renderer.SetCamera(m_camera);
     
     m_isRunning = true;
@@ -71,10 +80,10 @@ void Application::Run() {
         // Обновляем FPS
         UpdateFPS(deltaTime);
         
-        // Очищаем черные полосы
+        // Очищаем черные полосы (области за пределами сцены)
         m_window.ClearBlackBars();
         
-        // Настраиваем вьюпорт для сцены
+        // Настраиваем вьюпорт для сцены (центрируем изображение)
         m_window.SetupViewportForScene();
         
         Update(deltaTime);
@@ -131,9 +140,10 @@ void Application::Update(float deltaTime) {
 }
 
 void Application::Render() {
+    // Рендерим 3D сцену в низком разрешении
     m_renderer.BeginFrame();
     
-    // Рендерим все объекты сцены
+    // Рендерим все объекты сцены В НИЗКОМ РАЗРЕШЕНИИ
     const auto& objects = m_scene.GetObjects();
     for (const auto& obj : objects) {
         if (obj->GetMesh()) {
@@ -141,26 +151,54 @@ void Application::Render() {
         }
     }
     
-    // Рендерим отладочную информацию, если включена
+    // РЕНДЕРИМ UI ТОЖЕ В НИЗКОМ РАЗРЕШЕНИИ, НО ПЕРЕД КОПИРОВАНИЕМ В ТЕКСТУРУ
     if (m_showDebugInfo) {
-        // Формируем строку с информацией в нужном формате
+        // Временно переключаемся в режим 2D для текста
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        // ВАЖНО: меняем порядок координат для правильного позиционирования
+        glOrtho(0, m_window.GetWidth(), 0, m_window.GetHeight(), -1, 1);
+        
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        
+        glDisable(GL_DEPTH_TEST);
+        glDisable(GL_LIGHTING);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
         std::string resolutionInfo = std::to_string(m_window.GetWidth()) + "x" + 
                                    std::to_string(m_window.GetHeight());
-        
         std::string fpsInfo = "FPS:" + std::to_string(static_cast<int>(m_fps));
-        
-        // Объединяем в одну строку в формате "разрешение/FPS:значение"
         std::string debugText = resolutionInfo + "/" + fpsInfo;
         
-        // Рендерим текст в левом верхнем углу
-        m_textRenderer.RenderText(debugText, 10.0f, m_window.GetHeight() - 30.0f, 0.8f);
+        // Позиционируем в ВЕРХНЕМ левом углу
+        float textScale = 2.0f;
+        float textX = 15.0f;
+        float textY = m_window.GetHeight() - 40.0f; // От верхнего края
         
-        // Добавляем подсказку
+        // Рендерим текст
+        m_textRenderer.RenderText(debugText, textX, textY, textScale);
+        
         std::string hint = "Press ` to toggle debug info";
-        m_textRenderer.RenderText(hint, 10.0f, m_window.GetHeight() - 55.0f, 0.6f);
+        m_textRenderer.RenderText(hint, textX, textY - 35.0f, textScale * 0.8f);
+        
+        // Восстанавливаем 3D настройки
+        glDisable(GL_BLEND);
+        glMatrixMode(GL_PROJECTION);
+        glLoadMatrixf(m_camera.GetProjectionMatrix().m);
+        
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
     }
     
     m_renderer.EndFrame();
+    
+    // Рендерим низкое разрешение на экран (растягиваем без интерполяции)
+    m_renderer.RenderToScreen(m_window.GetScreenWidth(), m_window.GetScreenHeight());
 }
 
 } // namespace Revolt

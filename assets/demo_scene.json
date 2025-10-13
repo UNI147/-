@@ -27,7 +27,7 @@
       "rotation": [0.0, 0.0, 0.0],
       "scale": [2.0, 2.0, 2.0],
       "material": {
-        "color": [0.0, 0.0, 1.0, 1.0]
+        "color": [0.0, 0.0, 1.0, 0.5]
       },
       "parameters": {
         "majorRadius": 1.0,

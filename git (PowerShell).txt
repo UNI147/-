@@ -1,9 +1,15 @@
 cd C:\Revolt
 git pull
 git status
-#если всё работает правильно:
-#git add .
-#git commit -m "кратко что сделал"
-#git push
-#git status
-#Должно быть: "nothing to commit, working tree clean"
+# Если всё работает правильно:
+git add .
+git commit -m "кратко что сделал"
+git push
+git status
+# Должно быть: "nothing to commit, working tree clean"
+
+# Откат:
+# Получить последние изменения с GitHub
+git fetch origin
+# Откатиться к последнему коммиту в ветке main/master
+git reset --hard origin/main
