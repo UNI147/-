@@ -1,5 +1,4 @@
 Revolt/
-├── manifest.xml
 ├── CMakeLists.txt
 ├── libs/
 │   ├── glfw/
@@ -27,6 +26,8 @@ Revolt/
     │   ├── Window.cpp
     │   └── Window.h
     ├── graphics/
+    │   ├── TextRenderer.cpp
+    │   ├── TextRenderer.h
     │   ├── Camera.cpp
     │   ├── Camera.h
     │   ├── Mesh.cpp

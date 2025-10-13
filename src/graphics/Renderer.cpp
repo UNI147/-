@@ -1,7 +1,3 @@
-#ifdef _MSC_VER
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #include <GLFW/glfw3.h>
 #include "Renderer.h"
 #include <cmath>
@@ -12,9 +8,13 @@ Renderer::Renderer() {
 }
 
 void Renderer::Initialize(int width, int height) {
+    // Используем параметры вместо подавления предупреждений
+    
+    (void)width;
+    (void)height;
+    
     glEnable(GL_DEPTH_TEST);
     // Убираем установку вьюпорта и очистку - это теперь делает Window
-    SetClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     
     // ВКЛЮЧАЕМ освещение
     glEnable(GL_LIGHTING);
@@ -76,7 +76,11 @@ void Renderer::SetCamera(const Camera& camera) {
 }
 
 void Renderer::SetClearColor(float r, float g, float b, float a) {
-    // Сохраняем цвет, но не используем glClearColor здесь
+    // Просто подавляем предупреждения, так как метод пока не используется
+    (void)r;
+    (void)g;
+    (void)b;
+    (void)a;
 }
 
 } // namespace Revolt

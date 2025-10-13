@@ -174,6 +174,45 @@ void TextRenderer::DrawLetter(char letter, float x, float y, float scale) {
     float h = 12 * scale;
     
     switch (letter) {
+        case 'a': case 'A':
+            glBegin(GL_LINE_LOOP);
+            glVertex2f(x, y); glVertex2f(x + w, y);
+            glVertex2f(x + w, y + h); glVertex2f(x, y + h);
+            glEnd();
+            glBegin(GL_LINES);
+            glVertex2f(x, y + h/2); glVertex2f(x + w, y + h/2);
+            glEnd();
+            break;
+        case 'b': case 'B':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y); glVertex2f(x, y + h);
+            glVertex2f(x + w*0.7f, y + h); glVertex2f(x + w, y + h*0.7f);
+            glVertex2f(x + w*0.7f, y + h/2); glVertex2f(x + w, y + h*0.3f);
+            glVertex2f(x + w*0.7f, y); glVertex2f(x, y);
+            glEnd();
+            break;
+        case 'c': case 'C':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x + w, y + h); glVertex2f(x, y + h);
+            glVertex2f(x, y); glVertex2f(x + w, y);
+            glEnd();
+            break;
+        case 'd': case 'D':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y); glVertex2f(x, y + h);
+            glVertex2f(x + w*0.7f, y + h); glVertex2f(x + w, y + h/2);
+            glVertex2f(x + w*0.7f, y); glVertex2f(x, y);
+            glEnd();
+            break;
+        case 'e': case 'E':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x + w, y); glVertex2f(x, y);
+            glVertex2f(x, y + h); glVertex2f(x + w, y + h);
+            glEnd();
+            glBegin(GL_LINES);
+            glVertex2f(x, y + h/2); glVertex2f(x + w*0.7f, y + h/2);
+            glEnd();
+            break;
         case 'f': case 'F':
             glBegin(GL_LINE_STRIP);
             glVertex2f(x, y); glVertex2f(x, y + h);
@@ -183,11 +222,84 @@ void TextRenderer::DrawLetter(char letter, float x, float y, float scale) {
             glVertex2f(x, y + h/2); glVertex2f(x + w*0.7f, y + h/2);
             glEnd();
             break;
+        case 'g': case 'G':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x + w, y + h); glVertex2f(x, y + h);
+            glVertex2f(x, y); glVertex2f(x + w, y);
+            glVertex2f(x + w, y + h/2); glVertex2f(x + w/2, y + h/2);
+            glEnd();
+            break;
+        case 'h': case 'H':
+            glBegin(GL_LINES);
+            glVertex2f(x, y); glVertex2f(x, y + h);
+            glVertex2f(x + w, y); glVertex2f(x + w, y + h);
+            glVertex2f(x, y + h/2); glVertex2f(x + w, y + h/2);
+            glEnd();
+            break;
+        case 'i': case 'I':
+            glBegin(GL_LINES);
+            glVertex2f(x + w/2, y); glVertex2f(x + w/2, y + h);
+            glEnd();
+            break;
+        case 'j': case 'J':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x + w, y + h); glVertex2f(x + w/2, y + h);
+            glVertex2f(x + w/2, y); 
+            glEnd();
+            break;
+        case 'k': case 'K':
+            glBegin(GL_LINES);
+            glVertex2f(x, y); glVertex2f(x, y + h);
+            glVertex2f(x + w, y + h); glVertex2f(x, y + h/2);
+            glVertex2f(x, y + h/2); glVertex2f(x + w, y);
+            glEnd();
+            break;
+        case 'l': case 'L':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y + h); glVertex2f(x, y);
+            glVertex2f(x + w, y);
+            glEnd();
+            break;
+        case 'm': case 'M':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y); glVertex2f(x, y + h);
+            glVertex2f(x + w/2, y + h/2); glVertex2f(x + w, y + h);
+            glVertex2f(x + w, y);
+            glEnd();
+            break;
+        case 'n': case 'N':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y); glVertex2f(x, y + h);
+            glVertex2f(x + w, y); glVertex2f(x + w, y + h);
+            glEnd();
+            break;
+        case 'o': case 'O':
+            glBegin(GL_LINE_LOOP);
+            glVertex2f(x, y); glVertex2f(x + w, y); 
+            glVertex2f(x + w, y + h); glVertex2f(x, y + h);
+            glEnd();
+            break;
         case 'p': case 'P':
             glBegin(GL_LINE_STRIP);
             glVertex2f(x, y); glVertex2f(x, y + h);
             glVertex2f(x + w, y + h); glVertex2f(x + w, y + h/2);
             glVertex2f(x, y + h/2);
+            glEnd();
+            break;
+        case 'q': case 'Q':
+            glBegin(GL_LINE_LOOP);
+            glVertex2f(x, y); glVertex2f(x + w, y); 
+            glVertex2f(x + w, y + h); glVertex2f(x, y + h);
+            glEnd();
+            glBegin(GL_LINES);
+            glVertex2f(x + w/2, y + h/2); glVertex2f(x + w, y + h);
+            glEnd();
+            break;
+        case 'r': case 'R':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y); glVertex2f(x, y + h);
+            glVertex2f(x + w, y + h); glVertex2f(x + w, y + h/2);
+            glVertex2f(x, y + h/2); glVertex2f(x + w, y);
             glEnd();
             break;
         case 's': case 'S':
@@ -197,10 +309,48 @@ void TextRenderer::DrawLetter(char letter, float x, float y, float scale) {
             glVertex2f(x + w, y); glVertex2f(x, y);
             glEnd();
             break;
+        case 't': case 'T':
+            glBegin(GL_LINES);
+            glVertex2f(x + w/2, y); glVertex2f(x + w/2, y + h);
+            glVertex2f(x, y + h); glVertex2f(x + w, y + h);
+            glEnd();
+            break;
+        case 'u': case 'U':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y + h); glVertex2f(x, y);
+            glVertex2f(x + w, y); glVertex2f(x + w, y + h);
+            glEnd();
+            break;
+        case 'v': case 'V':
+            glBegin(GL_LINES);
+            glVertex2f(x, y + h); glVertex2f(x + w/2, y);
+            glVertex2f(x + w/2, y); glVertex2f(x + w, y + h);
+            glEnd();
+            break;
+        case 'w': case 'W':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y + h); glVertex2f(x, y);
+            glVertex2f(x + w/2, y + h/2); glVertex2f(x + w, y);
+            glVertex2f(x + w, y + h);
+            glEnd();
+            break;
         case 'x': case 'X':
             glBegin(GL_LINES);
             glVertex2f(x, y); glVertex2f(x + w, y + h);
             glVertex2f(x + w, y); glVertex2f(x, y + h);
+            glEnd();
+            break;
+        case 'y': case 'Y':
+            glBegin(GL_LINES);
+            glVertex2f(x, y + h); glVertex2f(x + w/2, y + h/2);
+            glVertex2f(x + w/2, y + h/2); glVertex2f(x + w, y + h);
+            glVertex2f(x + w/2, y + h/2); glVertex2f(x + w/2, y);
+            glEnd();
+            break;
+        case 'z': case 'Z':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y + h); glVertex2f(x + w, y + h);
+            glVertex2f(x, y); glVertex2f(x + w, y);
             glEnd();
             break;
         default:
@@ -217,6 +367,13 @@ void TextRenderer::DrawSymbol(char symbol, float x, float y, float scale) {
     float h = 12 * scale;
     
     switch (symbol) {
+        case '`': // Символ `
+            glBegin(GL_LINES);
+            glVertex2f(x + w*0.7f, y + h); glVertex2f(x + w*0.3f, y + h*0.7f);
+            glEnd();
+            break;
+        case ' ': // Пробел - ничего не рисуем
+            break;
         case ':':
             glPointSize(3.0f * scale);
             glBegin(GL_POINTS);
@@ -246,6 +403,24 @@ void TextRenderer::DrawSymbol(char symbol, float x, float y, float scale) {
             glVertex2f(x + w/2, y + h/8);
             glEnd();
             break;
+        case '(':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x + w, y + h); glVertex2f(x + w/2, y + h/2);
+            glVertex2f(x + w, y);
+            glEnd();
+            break;
+        case ')':
+            glBegin(GL_LINE_STRIP);
+            glVertex2f(x, y + h); glVertex2f(x + w/2, y + h/2);
+            glVertex2f(x, y);
+            glEnd();
+            break;
+        default:
+            // Простой прямоугольник для неизвестных символов
+            glBegin(GL_LINE_LOOP);
+            glVertex2f(x, y); glVertex2f(x + w, y); 
+            glVertex2f(x + w, y + h); glVertex2f(x, y + h);
+            glEnd();
     }
 }
 

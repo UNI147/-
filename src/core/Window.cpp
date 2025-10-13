@@ -94,23 +94,24 @@ void Window::SetupViewportForScene() {
     glDisable(GL_SCISSOR_TEST);
 }
 
+void Window::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    // Подавляем предупреждения для неиспользуемых параметров
+    (void)scancode;
+    (void)mods;
+    
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+}
+
 void Window::ClearBlackBars() {
     int framebufferWidth, framebufferHeight;
     glfwGetFramebufferSize(m_window, &framebufferWidth, &framebufferHeight);
-    
-    float targetAspect = (float)m_width / (float)m_height;
-    float screenAspect = (float)framebufferWidth / (float)framebufferHeight;
     
     // Очищаем ВЕСЬ экран черным цветом
     glViewport(0, 0, framebufferWidth, framebufferHeight);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-}
-
-void Window::KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
 }
 
 void Window::SwapBuffers() {
