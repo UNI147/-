@@ -33,4 +33,22 @@ namespace Revolt {
         
         return mesh;
     }
+
+    std::shared_ptr<Mesh> ResourceManager::LoadMDL(const std::string& filepath) {
+        std::string key = "MDL_" + filepath;
+        
+        auto it = m_meshCache.find(key);
+        if (it != m_meshCache.end()) {
+            std::cout << "Using cached MDL: " << key << std::endl;
+            return it->second;
+        }
+        
+        auto mesh = std::make_shared<MDLMesh>(filepath);
+        if (mesh) {
+            std::cout << "Created new MDL mesh: " << key << std::endl;
+            m_meshCache[key] = mesh;
+        }
+        
+        return mesh;
+    }
 }

@@ -61,7 +61,9 @@ bool Application::Initialize() {
     }
     
     // 1. Сначала загружаем сцену И камеру из JSON
-    SceneLoader::LoadSceneFromFile("../../assets/demo_scene.json", m_scene, m_camera);
+    // SceneLoader::LoadSceneFromFile("../../assets/demo_scene.json", m_scene, m_camera);
+    SceneLoader::LoadSceneFromFile("../../assets/gena_scene.json", m_scene, m_camera);
+
     
     // 2. Только ПОСЛЕ этого настраиваем проекцию камеры с правильным соотношением сторон
     float aspectRatio = (float)initialRes.width / (float)initialRes.height;

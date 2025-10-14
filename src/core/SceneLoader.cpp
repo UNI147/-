@@ -51,6 +51,9 @@ bool SceneLoader::LoadSceneFromFile(const std::string& filepath, Scene& scene, C
             } else if (type == "Torus") {
                 mesh = resourceManager.LoadMesh("Torus", params["majorRadius"], params["minorRadius"], 
                                                params["majorSegments"], params["minorSegments"]);
+            } else if (type == "MDL") {
+                std::string mdlPath = params["path"];
+                mesh = resourceManager.LoadMDL(mdlPath);
             }
             
             if (mesh) {
@@ -69,6 +72,8 @@ bool SceneLoader::LoadSceneFromFile(const std::string& filepath, Scene& scene, C
                     std::cout << "size: " << params["size"];
                 } else if (type == "Torus") {
                     std::cout << "majorRadius: " << params["majorRadius"] << ", minorRadius: " << params["minorRadius"];
+                } else if (type == "MDL") {
+                    std::cout << "path: " << params["path"];
                 }
                 std::cout << ", color: (" << color[0] << ", " << color[1] << ", " << color[2] << ", " << color[3] 
                           << ")" << std::endl;

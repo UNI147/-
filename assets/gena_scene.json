@@ -1,0 +1,23 @@
+{
+    "camera": {
+        "fov": 1.0472,
+        "near": 0.1,
+        "far": 100.0,
+        "position": [0, 0, 5],
+        "lookAt": [0, 0, 0]
+    },
+    "objects": [
+        {
+            "type": "MDL",
+            "parameters": {
+                "path": "../../assets/models/gena.mdl"
+            },
+            "material": {
+                "color": [1.0, 1.0, 1.0, 1.0]
+            },
+            "position": [0, 0, 0],
+            "rotation": [0, 0, 0],
+            "scale": [1, 1, 1]
+        }
+    ]
+}

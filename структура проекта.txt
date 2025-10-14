@@ -4,7 +4,11 @@ Revolt/
 │   ├── glfw/
 │   └── nlohmann/
 ├── assets/
-│   └── demo_scene.json
+│   ├── demo_scene.json
+│   ├── gena_scene.json
+│   └── models/
+│       ├── gena.mdl
+│       └── sexsymbolof1998.mdl
 ├── .vscode/
 │   ├── launch.json
 │   ├── settings.json

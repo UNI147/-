@@ -1,0 +1,40 @@
+{
+  "camera": {
+    "fov": 0.785,
+    "aspect": 1.3333,
+    "near": 0.1,
+    "far": 50.0,
+    "position": [0.0, 2.0, 6.0],
+    "lookAt": [0.0, 1.0, 0.0]
+  },
+  "objects": [
+    {
+      "type": "Pyramid",
+      "position": [-1.5, 0.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "scale": [1.0, 2.0, 1.0],
+      "material": {
+        "color": [0.9, 0.1, 0.1, 1.0]
+      },
+      "parameters": {
+        "base": 0.5,
+        "height": 1.0
+      }
+    },
+    {
+      "type": "Torus",
+      "position": [1.5, 1.0, 0.0],
+      "rotation": [0.0, 0.0, 0.0],
+      "scale": [1.2, 1.2, 1.2],
+      "material": {
+        "color": [0.1, 0.1, 0.9, 0.7]
+      },
+      "parameters": {
+        "majorRadius": 0.6,
+        "minorRadius": 0.15,
+        "majorSegments": 18,
+        "minorSegments": 9
+      }
+    }
+  ]
+}
