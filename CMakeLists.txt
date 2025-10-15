@@ -17,7 +17,7 @@ set(ENGINE_SOURCES
     src/graphics/Mesh.cpp
     src/graphics/Renderer.cpp
     src/graphics/Framebuffer.cpp
-    src/graphics/MDLMesh.cpp
+    src/graphics/MDLModel.cpp
     src/math/Matrix4.cpp
 )
 

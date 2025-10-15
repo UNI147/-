@@ -4,11 +4,7 @@ Revolt/
 │   ├── glfw/
 │   └── nlohmann/
 ├── assets/
-│   ├── demo_scene.json
-│   ├── gena_scene.json
-│   └── models/
-│       ├── gena.mdl
-│       └── sexsymbolof1998.mdl
+│   └── demo_scene.json
 ├── .vscode/
 │   ├── launch.json
 │   ├── settings.json
@@ -30,6 +26,8 @@ Revolt/
     │   ├── Window.cpp
     │   └── Window.h
     ├── graphics/
+    │   ├── MDLModel.cpp
+    │   ├── MDLModel.h
     │   ├── Framebuffer.cpp
     │   ├── Framebuffer.h
     │   ├── TextRenderer.cpp

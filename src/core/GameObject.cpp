@@ -59,4 +59,18 @@ void GameObject::ApplyMaterialToMesh() {
     }
 }
 
+void GameObject::Update(float deltaTime) {
+    // Пока что оставляем пустым, или добавьте логику обновления если нужно
+    // Например, обновление анимации для MDL моделей:
+    if (m_mdlModel && m_mdlModel->GetFrameCount() > 1) {
+        // Простая анимация - циклическое переключение кадров
+        static float animTime = 0.0f;
+        animTime += deltaTime;
+        if (animTime > 0.1f) { // Смена кадра каждые 0.1 секунды
+            m_currentFrame = (m_currentFrame + 1) % m_mdlModel->GetFrameCount();
+            animTime = 0.0f;
+        }
+    }
+}
+
 } // namespace Revolt

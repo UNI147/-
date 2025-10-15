@@ -4,48 +4,50 @@
     "aspect": 1.3333,
     "near": 0.1,
     "far": 100.0,
-    "position": [0.0, 5.0, 15.0],
+    "position": [0.0, 0.0, 5.0],
     "lookAt": [0.0, 0.0, 0.0]
   },
   "objects": [
     {
       "type": "Pyramid",
-      "position": [-4.0, 0.0, 0.0],
+      "name": "RedPyramid",
+      "position": [-2.5, 0.0, 0.0],
       "rotation": [0.0, 0.0, 0.0],
-      "scale": [2.0, 3.0, 2.0],
+      "scale": [1.0, 1.0, 1.0],
       "material": {
         "color": [1.0, 0.0, 0.0, 1.0]
       },
       "parameters": {
         "base": 1.0,
-        "height": 2.0
+        "height": 1.5
       }
     },
     {
-      "type": "Torus",
+      "type": "Cube", 
+      "name": "GreenCube",
       "position": [0.0, 0.0, 0.0],
       "rotation": [0.0, 0.0, 0.0],
-      "scale": [2.0, 2.0, 2.0],
+      "scale": [1.0, 1.0, 1.0],
       "material": {
-        "color": [0.0, 1.0, 0.0, 1.0]
+        "color": [0.0, 1.0, 0.0, 0.7]
       },
       "parameters": {
-        "majorRadius": 1.0,
-        "minorRadius": 0.3,
-        "majorSegments": 32,
-        "minorSegments": 16
+        "size": 0.8
       }
     },
     {
-      "type": "Cube",
-      "position": [4.0, 0.0, 0.0],
+      "type": "Cone",
+      "name": "YellowCone", 
+      "position": [2.5, 0.0, 0.0],
       "rotation": [0.0, 0.0, 0.0],
-      "scale": [2.0, 2.0, 2.0],
+      "scale": [1.0, 1.0, 1.0],
       "material": {
-        "color": [0.0, 0.0, 1.0, 1.0]
+        "color": [1.0, 1.0, 0.0, 1.0]
       },
       "parameters": {
-        "size": 1.0
+        "baseRadius": 0.6,
+        "height": 1.2,
+        "segments": 32
       }
     }
   ]

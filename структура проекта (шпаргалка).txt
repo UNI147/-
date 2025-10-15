@@ -1,7 +1,0 @@
-Revolt/
-├── assets/
-│   └── demo_scene.json
-└── src/
-    └── build/
-        └── Debug/
-            └──RevoltEngine.exe

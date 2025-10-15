@@ -61,9 +61,7 @@ bool Application::Initialize() {
     }
     
     // 1. Сначала загружаем сцену И камеру из JSON
-    // SceneLoader::LoadSceneFromFile("../../assets/demo_scene.json", m_scene, m_camera);
-    SceneLoader::LoadSceneFromFile("../../assets/gena_scene.json", m_scene, m_camera);
-
+    SceneLoader::LoadSceneFromFile("../../assets/demo_scene.json", m_scene, m_camera);
     
     // 2. Только ПОСЛЕ этого настраиваем проекцию камеры с правильным соотношением сторон
     float aspectRatio = (float)initialRes.width / (float)initialRes.height;
@@ -177,14 +175,27 @@ void Application::Update(float deltaTime) {
 }
 
 void Application::Render() {
-    // Рендерим 3D сцену в текущем разрешении
     m_renderer.BeginFrame();
     
-    // Рендерим все объекты сцены В ТЕКУЩЕМ РАЗРЕШЕНИИ
-    const auto& objects = m_scene.GetObjects();
+    // Отладочная информация
+    static int frameCount = 0;
+    if (frameCount++ % 60 == 0) {
+        std::cout << "Rendering frame, objects count: " << m_scene.GetObjects().size() << std::endl;
+    }
+    
+    // Рендерим все объекты сцены
+    const auto& objects = m_scene.GetObjects(); // ПЕРЕМЕЩАЕМ объявление сюда
     for (const auto& obj : objects) {
         if (obj->GetMesh()) {
+            std::cout << "Rendering mesh object" << std::endl;
             m_renderer.RenderMesh(*obj->GetMesh(), obj->GetTransform());
+        }
+        else if (obj->GetMDLModel()) {
+            std::cout << "Rendering MDL model" << std::endl;
+            m_renderer.RenderMDLModel(*obj->GetMDLModel(), obj->GetTransform(), obj->GetCurrentFrame());
+        }
+        else {
+            std::cout << "Object has no mesh or MDL model!" << std::endl;
         }
     }
     

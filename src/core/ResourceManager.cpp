@@ -1,5 +1,6 @@
 #include "ResourceManager.h"
 #include "../graphics/Mesh.h"
+#include "../graphics/MDLModel.h"
 #include <iostream>
 
 namespace Revolt {
@@ -33,22 +34,20 @@ namespace Revolt {
         
         return mesh;
     }
-
-    std::shared_ptr<Mesh> ResourceManager::LoadMDL(const std::string& filepath) {
-        std::string key = "MDL_" + filepath;
-        
-        auto it = m_meshCache.find(key);
-        if (it != m_meshCache.end()) {
-            std::cout << "Using cached MDL: " << key << std::endl;
+    
+    std::shared_ptr<MDLModel> ResourceManager::LoadMDLModel(const std::string& filename) {
+        auto it = m_mdlCache.find(filename);
+        if (it != m_mdlCache.end()) {
+            std::cout << "Using cached MDL model: " << filename << std::endl;
             return it->second;
         }
         
-        auto mesh = std::make_shared<MDLMesh>(filepath);
-        if (mesh) {
-            std::cout << "Created new MDL mesh: " << key << std::endl;
-            m_meshCache[key] = mesh;
+        auto model = std::make_shared<MDLModel>();
+        if (model->LoadFromFile(filename)) {
+            m_mdlCache[filename] = model;
+            return model;
         }
         
-        return mesh;
+        return nullptr;
     }
 }

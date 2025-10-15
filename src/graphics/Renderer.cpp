@@ -21,10 +21,10 @@ void Renderer::Initialize(int width, int height) {
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     
-    // НАСТРОЙКИ СВЕТА - БОЛЕЕ ЕСТЕСТВЕННЫЕ ЦВЕТА
+    // НАСТРОЙКИ СВЕТА
     float lightPos[] = {2.0f, 5.0f, 5.0f, 1.0f};
-    float lightColor[] = {1.0f, 1.0f, 1.0f, 1.0f}; // Белый свет вместо синеватого
-    float ambientLight[] = {0.6f, 0.6f, 0.6f, 1.0f}; // Увеличиваем ambient
+    float lightColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    float ambientLight[] = {0.6f, 0.6f, 0.6f, 1.0f};
     
     glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
@@ -36,6 +36,9 @@ void Renderer::Initialize(int width, int height) {
     // Дополнительные настройки для лучших цветов
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+    
+    // Устанавливаем цвет очистки
+    glClearColor(0.2f, 0.3f, 0.4f, 1.0f); // Сине-зеленый
 }
 
 void Renderer::BeginFrame() {
@@ -62,6 +65,13 @@ void Renderer::RenderToScreen(int screenWidth, int screenHeight) {
 }
 
 void Renderer::RenderMesh(Mesh& mesh, const Matrix4& transform) {
+    // Отладочная информация
+    static int renderCount = 0;
+    if (renderCount++ % 60 == 0) { // Выводим каждые 60 кадров
+        std::cout << "Rendering mesh, transform: " 
+                  << transform.m[0] << ", " << transform.m[5] << ", " << transform.m[10] << std::endl;
+    }
+    
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
@@ -85,6 +95,18 @@ void Renderer::SetCamera(const Camera& camera) {
 void Renderer::SetClearColor(float r, float g, float b, float a) {
     // Подавляем предупреждения
     (void)r; (void)g; (void)b; (void)a;
+}
+
+void Renderer::RenderMDLModel(MDLModel& model, const Matrix4& transform, int frame) {
+    glPushMatrix();
+    
+    // Применяем трансформацию объекта - ИСПРАВЛЕННАЯ СТРОКА
+    glMultMatrixf(transform.m);  // Используем прямое обращение к массиву
+    
+    // Рендерим MDL модель
+    model.Render(frame);
+    
+    glPopMatrix();
 }
 
 } // namespace Revolt

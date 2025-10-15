@@ -15,10 +15,16 @@ class Material {
     public:
         Material(float r = 1.0f, float g = 1.0f, float b = 1.0f, float a = 1.0f);
         void Apply() const;
-        void Unapply() const; // Добавляем метод для восстановления состояния
+        void Unapply() const;
         
         void SetColor(float r, float g, float b, float a = 1.0f);
         const float* GetColor() const { return m_color; }
+        
+        // Добавляем геттеры для отдельных компонентов
+        float GetR() const { return m_color[0]; }
+        float GetG() const { return m_color[1]; }
+        float GetB() const { return m_color[2]; }
+        float GetA() const { return m_color[3]; }
         
     private:
         float m_color[4];
