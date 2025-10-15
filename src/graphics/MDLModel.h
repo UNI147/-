@@ -94,6 +94,7 @@ private:
     
     void InitializeNormals();
     unsigned int CreateTextureFromSkin(const MDLSkin& skin);
+    void LoadPalette(unsigned char palette[256][3]);
 };
 
 } // namespace Revolt

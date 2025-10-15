@@ -33,19 +33,18 @@ void GameObject::SetScale(float x, float y, float z) {
 
 void GameObject::UpdateTransform() {
     if (m_transformDirty) {
-        // Начинаем с единичной матрицы
         m_transform = Matrix4::Identity();
         
-        // ПРАВИЛЬНЫЙ порядок трансформаций:
-        // 1. Масштабирование (первым)
+        // ПРАВИЛЬНЫЙ порядок для моделей из файлов:
+        // 1. Масштабирование
         m_transform.Scale(m_scale[0], m_scale[1], m_scale[2]);
         
-        // 2. Вращение (в градусах)
-        m_transform.Rotate(m_rotation[0], 1.0f, 0.0f, 0.0f); // X
-        m_transform.Rotate(m_rotation[1], 0.0f, 1.0f, 0.0f); // Y  
+        // 2. Вращение (Z, Y, X - часто лучший порядок для моделей)
         m_transform.Rotate(m_rotation[2], 0.0f, 0.0f, 1.0f); // Z
+        m_transform.Rotate(m_rotation[1], 0.0f, 1.0f, 0.0f); // Y  
+        m_transform.Rotate(m_rotation[0], 1.0f, 0.0f, 0.0f); // X
         
-        // 3. Позиция (последним)
+        // 3. Позиция
         m_transform.Translate(m_position[0], m_position[1], m_position[2]);
         
         m_transformDirty = false;

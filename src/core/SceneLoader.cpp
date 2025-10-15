@@ -71,6 +71,26 @@ bool SceneLoader::LoadSceneFromFile(const std::string& filepath, Scene& scene, C
                 continue;
             }
             
+            // Загрузка трансформации с проверками (ПЕРЕМЕЩАЕМ ЭТО ВЫШЕ)
+            float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
+            float rotX = 0.0f, rotY = 0.0f, rotZ = 0.0f;
+            float scaleX = 1.0f, scaleY = 1.0f, scaleZ = 1.0f;
+            
+            if (objData.contains("position") && objData["position"].size() >= 3) {
+                const auto& position = objData["position"];
+                posX = position[0]; posY = position[1]; posZ = position[2];
+            }
+            
+            if (objData.contains("rotation") && objData["rotation"].size() >= 3) {
+                const auto& rotation = objData["rotation"];
+                rotX = rotation[0]; rotY = rotation[1]; rotZ = rotation[2];
+            }
+            
+            if (objData.contains("scale") && objData["scale"].size() >= 3) {
+                const auto& scale = objData["scale"];
+                scaleX = scale[0]; scaleY = scale[1]; scaleZ = scale[2];
+            }
+            
             std::string type = objData["type"];
             
             if (type == "Pyramid") {
@@ -143,31 +163,14 @@ bool SceneLoader::LoadSceneFromFile(const std::string& filepath, Scene& scene, C
                           << ")" << std::endl;
             }
             
-            // Загрузка трансформации с проверками
-            float posX = 0.0f, posY = 0.0f, posZ = 0.0f;
-            float rotX = 0.0f, rotY = 0.0f, rotZ = 0.0f;
-            float scaleX = 1.0f, scaleY = 1.0f, scaleZ = 1.0f;
-            
-            if (objData.contains("position") && objData["position"].size() >= 3) {
-                const auto& position = objData["position"];
-                posX = position[0]; posY = position[1]; posZ = position[2];
-            }
-            
-            if (objData.contains("rotation") && objData["rotation"].size() >= 3) {
-                const auto& rotation = objData["rotation"];
-                rotX = rotation[0]; rotY = rotation[1]; rotZ = rotation[2];
-            }
-            
-            if (objData.contains("scale") && objData["scale"].size() >= 3) {
-                const auto& scale = objData["scale"];
-                scaleX = scale[0]; scaleY = scale[1]; scaleZ = scale[2];
-            }
-            
+            // Устанавливаем трансформацию
             obj->SetPosition(posX, posY, posZ);
             
-            // Для тора - добавляем начальный поворот на 90 градусов по X
+            // Применяем специальные повороты для разных типов объектов
             if (type == "Torus") {
                 obj->SetRotation(rotX + 90.0f, rotY, rotZ);
+            } else if (type == "MDLModel") {
+                obj->SetRotation(rotX, rotY, rotZ);
             } else {
                 obj->SetRotation(rotX, rotY, rotZ);
             }
@@ -221,6 +224,8 @@ void SceneLoader::CreateDemoScene(Scene& scene, Camera& camera) {
     if (mdlModel) {
         mdlObj->SetMDLModel(mdlModel);
         mdlObj->SetPosition(0.0f, -1.0f, 0.0f);
+        // Для MDL моделей в демо-сцене тоже применяем корректирующий поворот
+        mdlObj->SetRotation(-90.0f, 0.0f, 0.0f);
         mdlObj->UpdateTransform();
         std::cout << "Loaded MDL model for demo scene" << std::endl;
     } else {

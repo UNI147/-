@@ -169,7 +169,11 @@ void Application::Update(float deltaTime) {
     for (size_t i = 0; i < objects.size(); ++i) {
         float rotation = totalTime * rotationSpeed;
         
-        objects[i]->SetRotation(0.0f, rotation, 0.0f);
+        if (objects[i]->GetMDLModel()) {
+            objects[i]->SetRotation(-90.0f, rotation, 0.0f);
+        } else {
+            objects[i]->SetRotation(0.0f, rotation, 0.0f);
+        }
         objects[i]->UpdateTransform();
     }
 }
@@ -177,21 +181,13 @@ void Application::Update(float deltaTime) {
 void Application::Render() {
     m_renderer.BeginFrame();
     
-    // Отладочная информация
-    static int frameCount = 0;
-    if (frameCount++ % 60 == 0) {
-        std::cout << "Rendering frame, objects count: " << m_scene.GetObjects().size() << std::endl;
-    }
-    
     // Рендерим все объекты сцены
     const auto& objects = m_scene.GetObjects(); // ПЕРЕМЕЩАЕМ объявление сюда
     for (const auto& obj : objects) {
         if (obj->GetMesh()) {
-            std::cout << "Rendering mesh object" << std::endl;
             m_renderer.RenderMesh(*obj->GetMesh(), obj->GetTransform());
         }
         else if (obj->GetMDLModel()) {
-            std::cout << "Rendering MDL model" << std::endl;
             m_renderer.RenderMDLModel(*obj->GetMDLModel(), obj->GetTransform(), obj->GetCurrentFrame());
         }
         else {
